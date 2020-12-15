@@ -11,8 +11,12 @@ variable "vpc_cidr" {
   description = "VPC cidr block"
 }
 
-variable "subnets_cidr" {
-  description = "VPC Subnets"
+variable "private_subnets_cidr" {
+  description = "VPC Private Subnets"
+}
+
+variable "public_subnets_cidr" {
+  description = "VPC Public Subnets"
 }
 
 variable "azs" {

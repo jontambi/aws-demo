@@ -17,17 +17,32 @@ resource "aws_vpc" "vpc" {
   )
 }
 
-resource "aws_subnet" "subnet" {
-  count = length(var.subnets_cidr)
+resource "aws_subnet" "private-subnet" {
+  count = length(var.private_subnets_cidr)
   #map_public_ip_on_launch = true
 
   availability_zone = element(var.azs, count.index)
-  cidr_block        = element(var.subnets_cidr, count.index)
+  cidr_block        = element(var.private_subnets_cidr, count.index)
   vpc_id            = aws_vpc.vpc.id
 
   tags = map(
-    "Name", "${var.environment}-${var.vpc_name}-subnet-${count.index + 1}",
-    "kubernetes.io/cluster/${var.environment}-${var.vpc_name}", "shared",
+    "Name", "${var.environment}-${var.vpc_name}-private-subnet-${count.index + 1}",
+#    "kubernetes.io/cluster/${var.environment}-${var.vpc_name}", "shared",
+  )
+
+}
+
+resource "aws_subnet" "public-subnet" {
+  count = length(var.public_subnets_cidr)
+  map_public_ip_on_launch = true
+
+  availability_zone = element(var.azs, count.index)
+  cidr_block        = element(var.public_subnets_cidr, count.index)
+  vpc_id            = aws_vpc.vpc.id
+
+  tags = map(
+    "Name", "${var.environment}-${var.vpc_name}-public-subnet-${count.index + 1}",
+#    "kubernetes.io/cluster/${var.environment}-${var.vpc_name}", "shared",
   )
 
 }
@@ -53,8 +68,8 @@ resource "aws_route_table" "route" {
 }
 
 resource "aws_route_table_association" "route-a" {
-  count = length(var.subnets_cidr)
+  count = length(var.private_subnets_cidr)
 
   route_table_id = aws_route_table.route.id
-  subnet_id      = element(aws_subnet.subnet.*.id, count.index)
+  subnet_id      = element(aws_subnet.private-subnet.*.id, count.index)
 }

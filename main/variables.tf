@@ -9,9 +9,14 @@ variable "vpc_cidr" {
   description = "VPC cidr block"
 }
 
-variable "subnets_cidr" {
-  default     = ["10.100.1.0/24", "10.100.2.0/24"]
-  description = "A list of VPC subnet IDs which the worker nodes are using."
+variable "private_subnets_cidr" {
+  default     = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24", "10.0.4.0/24"]
+  description = "A list of VPC private subnet IDs which the nodes are using."
+}
+
+variable "public_subnets_cidr" {
+    description = "A list of VPC public subnet IDs which the nodes are using."
+    default = ["10.0.0.0/28", "10.0.0.16/28"]
 }
 
 variable "azs" {
