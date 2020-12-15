@@ -7,3 +7,11 @@ module "vpc" {
   public_subnets_cidr  = var.public_subnets_cidr
   azs                  = var.azs
 }
+
+#module "alb" {
+#  source  = "../modules/alb"
+#  vpc_id  = module.vpc.id
+#  subnet1 = module.vpc.subnet1
+#  subnet2 = module.vpc.subnet2
+  
+#}

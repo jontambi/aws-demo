@@ -13,8 +13,15 @@ resource "aws_vpc" "vpc" {
 
   tags = map(
     "Name", "${var.environment}-${var.vpc_name}-vpc",
-    "kubernetes.io/cluster/${var.environment}-${var.vpc_name}", "shared",
   )
+}
+
+resource "aws_internet_gateway" "igw" {
+  vpc_id = aws_vpc.vpc.id
+
+  tags = {
+    Name = "${var.environment}-${var.vpc_name}-internetgateway"
+  }
 }
 
 resource "aws_subnet" "private-subnet" {
@@ -27,9 +34,7 @@ resource "aws_subnet" "private-subnet" {
 
   tags = map(
     "Name", "${var.environment}-${var.vpc_name}-private-subnet-${count.index + 1}",
-#    "kubernetes.io/cluster/${var.environment}-${var.vpc_name}", "shared",
   )
-
 }
 
 resource "aws_subnet" "public-subnet" {
@@ -42,20 +47,50 @@ resource "aws_subnet" "public-subnet" {
 
   tags = map(
     "Name", "${var.environment}-${var.vpc_name}-public-subnet-${count.index + 1}",
-#    "kubernetes.io/cluster/${var.environment}-${var.vpc_name}", "shared",
   )
 
 }
 
-resource "aws_internet_gateway" "igw" {
-  vpc_id = aws_vpc.vpc.id
+resource "aws_default_route_table" "route-private" {
+  count = length(var.private_subnets_cidr)
+  default_route_table_id = aws_vpc.vpc.default_route_table_id
+
+  route {
+    nat_gateway_id = aws_nat_gateway.default[count.index].id
+    cidr_block     = "0.0.0.0/0"
+  }
 
   tags = {
-    Name = "${var.environment}-${var.vpc_name}-internetgateway"
+    Name = "my-private-route-table"
   }
 }
 
-resource "aws_route_table" "route" {
+#resource "aws_route_table" "route-private" {
+#  count = length(var.private_subnets_cidr)
+#  vpc_id = aws_vpc.vpc.id
+
+#  route {
+#    cidr_block = "0.0.0.0/0"
+#    gateway_id = aws_internet_gateway.igw.id
+#  }
+#  tags = {
+#    Name = "${var.environment}-${var.vpc_name}-privateRouteTable"
+#  }
+#}
+
+#resource "aws_route" "private" {
+#  count = length(var.private_subnets_cidr)
+
+#  route_table_id = aws_route_table.route-private[count.index].id
+#  destination_cidr_block = "0.0.0.0/0"
+#  nat_gateway_id = aws_nat_gateway.default[count.index].id
+
+#  depends_on = [ 
+#    aws_nat_gateway.default
+#   ]
+#}
+
+resource "aws_route_table" "route-public" {
   vpc_id = aws_vpc.vpc.id
 
   route {
@@ -67,9 +102,46 @@ resource "aws_route_table" "route" {
   }
 }
 
-resource "aws_route_table_association" "route-a" {
-  count = length(var.private_subnets_cidr)
+#resource "aws_route" "public" {
+#  count = length(var.public_subnets_cidr)
+#  route_table_id         = aws_route_table.route-public.id
+#  destination_cidr_block = "0.0.0.0/0"
+#  nat_gateway_id         = aws_nat_gateway.default[count.index].id
+#}
 
-  route_table_id = aws_route_table.route.id
+
+resource "aws_route_table_association" "private" {
+  count          = length(var.private_subnets_cidr)
+
+  route_table_id = aws_default_route_table.route-private[count.index].id
   subnet_id      = element(aws_subnet.private-subnet.*.id, count.index)
 }
+
+resource "aws_route_table_association" "public" {
+  count          = length(var.public_subnets_cidr)
+
+  route_table_id = aws_route_table.route-public.id
+  subnet_id      = element(aws_subnet.public-subnet.*.id, count.index)  
+}
+
+resource "aws_eip" "nat" {
+  count = length(var.public_subnets_cidr)
+  vpc   = true
+}
+
+resource "aws_nat_gateway" "default" {
+  depends_on = [ 
+    aws_internet_gateway.igw
+  ]
+
+  count         = length(var.public_subnets_cidr)
+  allocation_id = aws_eip.nat[count.index].id
+  subnet_id     = aws_subnet.public-subnet[count.index].id
+
+  tags = {
+    Name = "${var.environment}-${var.vpc_name}-NAT"
+  }
+  
+}
+
+
