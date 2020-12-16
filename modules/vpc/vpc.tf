@@ -26,7 +26,6 @@ resource "aws_internet_gateway" "igw" {
 
 resource "aws_subnet" "private-subnet" {
   count = length(var.private_subnets_cidr)
-  #map_public_ip_on_launch = true
 
   availability_zone = element(var.azs, count.index)
   cidr_block        = element(var.private_subnets_cidr, count.index)
@@ -52,43 +51,18 @@ resource "aws_subnet" "public-subnet" {
 }
 
 resource "aws_default_route_table" "route-private" {
-  count = length(var.private_subnets_cidr)
+  #count = length(var.private_subnets_cidr)
   default_route_table_id = aws_vpc.vpc.default_route_table_id
 
   route {
-    nat_gateway_id = aws_nat_gateway.default[count.index].id
+    nat_gateway_id = aws_nat_gateway.default.id
     cidr_block     = "0.0.0.0/0"
   }
 
   tags = {
-    Name = "my-private-route-table"
+    Name = "${var.environment}-${var.vpc_name}-privateRouteTable" 
   }
 }
-
-#resource "aws_route_table" "route-private" {
-#  count = length(var.private_subnets_cidr)
-#  vpc_id = aws_vpc.vpc.id
-
-#  route {
-#    cidr_block = "0.0.0.0/0"
-#    gateway_id = aws_internet_gateway.igw.id
-#  }
-#  tags = {
-#    Name = "${var.environment}-${var.vpc_name}-privateRouteTable"
-#  }
-#}
-
-#resource "aws_route" "private" {
-#  count = length(var.private_subnets_cidr)
-
-#  route_table_id = aws_route_table.route-private[count.index].id
-#  destination_cidr_block = "0.0.0.0/0"
-#  nat_gateway_id = aws_nat_gateway.default[count.index].id
-
-#  depends_on = [ 
-#    aws_nat_gateway.default
-#   ]
-#}
 
 resource "aws_route_table" "route-public" {
   vpc_id = aws_vpc.vpc.id
@@ -102,18 +76,10 @@ resource "aws_route_table" "route-public" {
   }
 }
 
-#resource "aws_route" "public" {
-#  count = length(var.public_subnets_cidr)
-#  route_table_id         = aws_route_table.route-public.id
-#  destination_cidr_block = "0.0.0.0/0"
-#  nat_gateway_id         = aws_nat_gateway.default[count.index].id
-#}
-
-
 resource "aws_route_table_association" "private" {
   count          = length(var.private_subnets_cidr)
 
-  route_table_id = aws_default_route_table.route-private[count.index].id
+  route_table_id = aws_default_route_table.route-private.id
   subnet_id      = element(aws_subnet.private-subnet.*.id, count.index)
 }
 
@@ -125,7 +91,6 @@ resource "aws_route_table_association" "public" {
 }
 
 resource "aws_eip" "nat" {
-  count = length(var.public_subnets_cidr)
   vpc   = true
 }
 
@@ -134,9 +99,9 @@ resource "aws_nat_gateway" "default" {
     aws_internet_gateway.igw
   ]
 
-  count         = length(var.public_subnets_cidr)
-  allocation_id = aws_eip.nat[count.index].id
-  subnet_id     = aws_subnet.public-subnet[count.index].id
+  #count         = length(var.public_subnets_cidr)
+  allocation_id = aws_eip.nat.id
+  subnet_id     = aws_subnet.public-subnet.0.id
 
   tags = {
     Name = "${var.environment}-${var.vpc_name}-NAT"

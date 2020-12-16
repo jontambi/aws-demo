@@ -5,7 +5,3 @@ terraform {
     aws = ">= 2.8"
   }
 }
-
-provider "random" {
-  version = "~> 2.1"
-}
