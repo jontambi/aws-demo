@@ -92,6 +92,10 @@ resource "aws_route_table_association" "public" {
 
 resource "aws_eip" "nat" {
   vpc   = true
+  
+  tags = {
+    Name = "${var.environment}-${var.vpc_name}-ElasticIP"
+  }
 }
 
 resource "aws_nat_gateway" "default" {
