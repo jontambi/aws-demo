@@ -1,6 +1,8 @@
 {
     "builders": [{
       "type": "amazon-ebs",
+      "profile": "default",
+      "region": "us-east-1",
       "source_ami": "ami-0affd4508a5d2481b",
       "instance_type": "t2.micro",
       "ssh_username": "centos",
