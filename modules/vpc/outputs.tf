@@ -17,3 +17,12 @@ output "public_route_table_id" {
 output "private_route_table_id" {
   value = aws_default_route_table.route-private[*].id
 }
+
+
+output "private_subnet1" {
+  value = element(aws_subnet.private-subnet.*.id, 3 )
+}
+
+output "private_subnet2" {
+  value = element(aws_subnet.private-subnet.*.id, 4 )
+}

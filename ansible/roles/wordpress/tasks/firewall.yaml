@@ -5,8 +5,8 @@
 - name: Disable SELinux Without Reboot
   command: /sbin/setenforce 0
  
-- name: Configure Firewall
-  firewalld: zone=public service=http permanent=yes state=enabled
+#- name: Configure Firewall
+#  firewalld: zone=public service=httpd permanent=yes state=enabled
  
-- name: Reload Firewall
-  systemd: name=firewalld state=reloaded
+#- name: Reload Firewall
+#  systemd: name=firewalld state=reloaded

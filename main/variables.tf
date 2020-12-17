@@ -27,3 +27,12 @@ variable "azs" {
 variable "prefix" {
   description = "This is the environment where your cluster is deployed. qa, prod, dev or demo"
 }
+
+variable "my_public_key" {
+  default = "/home/john/.ssh/id_rsa.pub"
+}
+
+variable "db_instance" {
+  default = "db.t2.micro"
+
+}

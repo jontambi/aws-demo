@@ -2,10 +2,11 @@
 php_modules: [ 'php', 'php-curl', 'php-gd', 'php-mbstring', 'php-xml', 'php-xmlrpc', 'php-soap', 'php-intl', 'php-zip' ]
  
 #RDS PostgreSQL Settings
-#mysql_root_password: "your-root-password"
-#mysql_db: "wpdb"
-#mysql_user: "wpuser"
-#mysql_password: "password"
+postgres_root_password: "your-root-password"
+postgres_db: "wpdb"
+postgres_user: "wpuser"
+postgres_password: "password"
+postgres_host: "rdspostgresql"
  
 #HTTP Settings
 http_host: "wp.demosre.com"
