@@ -7,10 +7,6 @@ variable "vpc_name" {
   type        = string
 }
 
-#variable "private_subnets_cidr" {
-#  description = "VPC Private Subnets"
-#}
-
 variable "azs" {
   description = "Available zones"
 }
