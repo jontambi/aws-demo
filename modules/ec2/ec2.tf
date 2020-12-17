@@ -12,7 +12,7 @@ resource "aws_instance" "wordpress_server" {
     availability_zone           = element(var.azs, count.index)
     instance_type               = "t2.micro"
     key_name                    = aws_key_pair.ssh_default.key_name
-#    vpc_security_group_ids = [aws_security_group.connection_allow.id]
+    vpc_security_group_ids      = [var.security_group]
     subnet_id                   = element(var.subnet_id, count.index)
     associate_public_ip_address = false
 

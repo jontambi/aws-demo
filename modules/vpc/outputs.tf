@@ -30,3 +30,7 @@ output "private_subnet1" {
 output "private_subnet2" {
   value = element(aws_subnet.private-subnet.*.id, 4 )
 }
+
+output "security_group" {
+  value = aws_security_group.wordpress_sg.id
+}

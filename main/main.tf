@@ -31,6 +31,7 @@ module "ec2" {
   azs                  = var.azs
   subnet_id            = module.vpc.private_subnet_id
   my_public_key        = var.my_public_key
+  security_group       = module.vpc.security_group
 
   depends_on = [ 
     module.rds
@@ -50,3 +51,15 @@ module "ec2" {
 #   ]
   
 #}
+
+module "route53" {
+  source = "../modules/route53"
+  vpc_name    = var.vpc_name
+  environment = var.prefix
+  vpc_id      = module.vpc.vpc_id
+
+  depends_on = [ 
+    module.alb
+   ]
+  
+}

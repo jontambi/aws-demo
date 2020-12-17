@@ -3,10 +3,10 @@ php_modules: [ 'php', 'php-curl', 'php-gd', 'php-mbstring', 'php-xml', 'php-xmlr
  
 #RDS PostgreSQL Settings
 postgres_root_password: "postgresadmin"
-postgres_db: "demopostgres"
+postgres_db: "demosre"
 postgres_user: "postgres"
 postgres_password: "postgresadmin"
-postgres_host: "rdspostgresql"
+postgres_host: "demosre-postgres-1.cm6perbt44qh.us-east-1.rds.amazonaws.com"
  
 #HTTP Settings
 http_host: "wp.demosre.com"
