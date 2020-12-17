@@ -8,7 +8,7 @@ resource "aws_lb_target_group" "group" {
     unhealthy_threshold = 2
   }
 
-  name        = "target-group"
+  name        = "demo-group"
   port        = 80
   protocol    = "HTTP"
   target_type = "instance"
@@ -31,12 +31,12 @@ resource "aws_lb" "alb" {
   internal = false
 
   security_groups = [
-    aws_security_group.alb-sg.id,
+    aws_security_group.alb-sg.id
   ]
 
   subnets = [
-    "${var.subnet1}",
-    "${var.subnet2}",
+    var.subnet1,
+    var.subnet2,
   ]
 
   tags = {
@@ -47,7 +47,7 @@ resource "aws_lb" "alb" {
   load_balancer_type = "application"
 }
 
-resource "aws_lb_listener" "my-test-alb-listner" {
+resource "aws_lb_listener" "alb-listener" {
   load_balancer_arn = aws_lb.alb.arn
   port              = 80
   protocol          = "HTTP"

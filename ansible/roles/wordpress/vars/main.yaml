@@ -2,10 +2,10 @@
 php_modules: [ 'php', 'php-curl', 'php-gd', 'php-mbstring', 'php-xml', 'php-xmlrpc', 'php-soap', 'php-intl', 'php-zip' ]
  
 #RDS PostgreSQL Settings
-postgres_root_password: "your-root-password"
-postgres_db: "wpdb"
-postgres_user: "wpuser"
-postgres_password: "password"
+postgres_root_password: "postgresadmin"
+postgres_db: "demopostgres"
+postgres_user: "postgres"
+postgres_password: "postgresadmin"
 postgres_host: "rdspostgresql"
  
 #HTTP Settings

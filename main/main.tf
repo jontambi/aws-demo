@@ -13,9 +13,14 @@ module "rds" {
   vpc_name             = var.vpc_name
   vpc_id               = module.vpc.vpc_id
   environment          = var.prefix
+  azs                  = var.azs
   rds_subnet1          = module.vpc.private_subnet1
   rds_subnet2          = module.vpc.private_subnet2
   db_instance          = var.db_instance
+
+  depends_on = [ 
+    module.vpc
+   ]
 }
 
 module "ec2" {
@@ -32,10 +37,16 @@ module "ec2" {
    ]
 }
 
-#module "alb" {
-#  source  = "../modules/alb"
-#  vpc_id  = module.vpc.id
-#  subnet1 = module.vpc.subnet1
-#  subnet2 = module.vpc.subnet2
+module "alb" {
+  source         = "../modules/alb"
+  vpc_name       = var.vpc_name
+  environment    = var.prefix
+  vpc_id         = module.vpc.vpc_id
+  subnet1        = module.vpc.public_subnet1
+  subnet2        = module.vpc.public_subnet2
+
+  depends_on = [ 
+    module.vpc
+   ]
   
-#}
+}
