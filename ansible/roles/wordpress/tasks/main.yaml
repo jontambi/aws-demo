@@ -1,0 +1,13 @@
+---
+# tasks file for wordpress
+- name: Install httpd
+  include: httpd.yaml
+
+- name: Install php
+  include: php.yaml
+
+- name: Install wordpress
+  include: wordpress.yaml
+
+- name: Configure firewalld
+  include: firewall.yaml

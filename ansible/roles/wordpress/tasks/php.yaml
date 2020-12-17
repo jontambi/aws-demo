@@ -1,0 +1,32 @@
+- name: Install EPEL 7
+  yum:
+    name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+    update_cache: yes
+    state: latest
+
+- name: Install PHP Remi Repository
+  yum: 
+    name: http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+    update_cache: yes
+    state: latest
+ 
+- name: Install PHP Extensions
+  yum: 
+    name: "{{ item }}"
+    update_cache: yes
+    state: latest
+  loop: "{{ php_modules }}"
+
+- name: Install yum-utils
+  yum:
+    name: yum-utils
+    update_cache: yes
+    state: latest
+
+- name: Enable remi-php72
+  command: yum-config-manager --enable remi-php72
+
+- name: update the system CentOS7
+  yum:
+    name: "*"
+    state: latest
