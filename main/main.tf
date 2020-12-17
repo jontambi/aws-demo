@@ -37,16 +37,16 @@ module "ec2" {
    ]
 }
 
-module "alb" {
-  source         = "../modules/alb"
-  vpc_name       = var.vpc_name
-  environment    = var.prefix
-  vpc_id         = module.vpc.vpc_id
-  subnet1        = module.vpc.public_subnet1
-  subnet2        = module.vpc.public_subnet2
+#module "alb" {
+#  source         = "../modules/alb"
+#  vpc_name       = var.vpc_name
+#  environment    = var.prefix
+#  vpc_id         = module.vpc.vpc_id
+#  subnet1        = module.vpc.public_subnet1
+#  subnet2        = module.vpc.public_subnet2
 
-  depends_on = [ 
-    module.vpc
-   ]
+#  depends_on = [ 
+#    module.vpc
+#   ]
   
-}
+#}
