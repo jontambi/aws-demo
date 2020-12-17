@@ -10,11 +10,10 @@ resource "aws_route53_zone" "demo-zone" {
   }
 }
 
-#resource "aws_route53_record" "demo-record" {
-#  count   = "${length(var.hostname)}"
-#  name    = "${element(var.hostname,count.index )}"
-#  records = ["${element(var.arecord,count.index )}"]
-#  zone_id = "${aws_route53_zone.my-test-zone.id}"
-#  type    = "A"
-#  ttl     = "300"
-#}
+resource "aws_route53_record" "www" {
+  zone_id = aws_route53_zone.demo-zone.zone_id
+  name    = "www.demosre.com"
+  type    = "A"
+  ttl     = "300"
+  records = [var.aws_eip]
+}
