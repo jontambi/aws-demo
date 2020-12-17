@@ -11,7 +11,7 @@ resource "aws_db_instance" "rds-postgres" {
   name                      = var.name
   username                  = "postgres"
   password                  = "postgresadmin"
-#  skip_final_snapshot       = true
+#  skip_final_snapshot       = false 
 #  apply_immediately         = true
   availability_zone         = element(var.azs, count.index)
 #  final_snapshot_identifier = "demosre" 
