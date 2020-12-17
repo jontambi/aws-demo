@@ -1,9 +1,21 @@
+# Created by https://www.toptal.com/developers/gitignore/api/visualstudiocode,terraform,packer,ansible
+# Edit at https://www.toptal.com/developers/gitignore?templates=visualstudiocode,terraform,packer,ansible
 
-# Created by https://www.toptal.com/developers/gitignore/api/visualstudiocode,terraform
-# Edit at https://www.toptal.com/developers/gitignore?templates=visualstudiocode,terraform
+### Ansible ###
+*.retry
+
+### Packer ###
+# Cache objects
+packer_cache/
+
+# Crash log
+crash.log
+
+# For built boxes
+*.box
 
 ### Terraform ###
-# Local .terrafosrm directories
+# Local .terraform directories
 **/.terraform/*
 
 # .tfstate files
@@ -11,10 +23,6 @@
 *.tfstate.*
 
 # Crash log files
-crash.log
-
-#Lock HCL
-.terraform.lock.*
 
 # Ignore any .tfvars files that are generated automatically for each Terraform run. Most
 # .tfvars files are managed as part of configuration and so should be included in
@@ -46,4 +54,4 @@ override.tf.json
 .history
 .ionide
 
-# End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,terraform
+# End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,terraform,packer,ansible
